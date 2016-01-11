@@ -1,0 +1,22 @@
+gr[li_] := 
+ Sort@Flatten@({Total@li[[All, #]], Total@li[[#]]} & /@ 
+     Range@Length@li)
+grli[list_] := 
+ With[{n = Length@list, col = Lighter@Lighter@Lighter@Lighter@Gray}, 
+   Grid[#, Alignment -> Right, Frame -> All, ItemSize -> All, 
+      Background -> {{}, {}, 
+        Join[{1, #} -> col & /@ Range[n + 1], {#, 1} -> col & /@ 
+          Range[2, n + 1]]}] & /@ 
+    With[{aa = {list}}, 
+     Table[With[{bb = 
+         Transpose@({Total@aa[[t]][[All, #]], Total@aa[[t]][[#]]} & /@
+             Range@n)}, Join[{{Style[Total[bb[[1]]], Bold]} 
+          ~Join~bb[[1]]}, 
+        Join[{bb[[2, #]]}, aa[[t, #]]] & /@ Range@n]], {t, 
+       Length@aa}]]][[1]]
+test[n_] := 
+ grli@# & /@ 
+  Select[Subsets[
+    Select[DeleteDuplicates[Sort@# & /@ Tuples[{0, -1, 1}, {n}]], 
+     Count[#, 0] == 1 \[Or] Count[#, 0] == 0 &], {n}], 
+   Length@Complement[Range[-n, n], gr@#] == 1 &]
